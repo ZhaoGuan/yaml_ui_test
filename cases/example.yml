@@ -2,16 +2,16 @@ TITLE:
 DESCRIPTION:
 URL: https://www.baidu.com
 ACTIONS:
-    - TYPE: sleep
-      DATA:
-        wait_time: 10
+#     - TYPE: sleep
+#       DATA:
+#         wait_time: 10
     - TYPE: send_element
       DATA:
-        value : //*[@id="kw"]
-        message: good
+        - //*[@id="kw"]
+        - good
     - TYPE: sleep
       DATA:
-        wait_time: 10
+        - 10
     - TYPE: click_element
       DATA:
         value: //*[@id="su"]
@@ -23,4 +23,18 @@ ACTIONS:
         value: //*[@id="1"]/h3/a
     - TYPE: sleep
       DATA:
-        wait_time: 10
+        wait_time: 5
+    - TYPE: switch_new_page
+      DATA:
+    - TYPE: sleep
+      DATA:
+        wait_time: 5
+    - TYPE: print_title
+      DATA:
+    - TYPE: switch_default_page
+      DATA:
+    - TYPE: print_title
+      DATA:
+    - TYPE: sleep
+      DATA:
+        wait_time: 5

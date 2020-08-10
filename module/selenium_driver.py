@@ -32,4 +32,4 @@ class BrowserDriver:
     def close_chrome_browser_driver(self):
         self.webdriver.quit()
         self.docker_browser.browser_close()
-        print("STOP")
+        print("Close WebDriver and Docker")

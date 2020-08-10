@@ -23,9 +23,6 @@ class CaseRunner:
         self.wa.url(self.url)
         self.ai = ActionImport(self.webdriver)
 
-    def __del__(self):
-        print("结束测试")
-
     def runner(self):
         try:
             self.__runner()
@@ -40,14 +37,14 @@ class CaseRunner:
 
     def do_action(self, data):
         action_type = data["TYPE"]
-        action_data = data["DATA"]
+        if "DATA" in data.keys():
+            action_data = data["DATA"]
+        else:
+            action_data = None
         # action_assert = data["ASSERT"]
         # action_assert_type = action_assert["TYPE"]
         # action_assert_data = action_assert["DATA"]
-        self.ai.use_function(action_type, action_data)
-
-
-if __name__ == "__main__":
-    example_path = PATH + "/../cases/example.yml"
-    cr = CaseRunner(example_path)
-    cr.runner()
+        if isinstance(action_data, dict):
+            self.ai.use_function(action_type, action_data)
+        else:
+            self.ai.use_function(action_type, action_data)

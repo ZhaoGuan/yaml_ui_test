@@ -27,7 +27,12 @@ class ActionImport:
         :return: 直接执行对应方法
         """
         func = getattr(self.base_function, func_name)
-        return func(**kwargs)
+        if isinstance(kwargs, dict):
+            return func(**kwargs)
+        elif isinstance(kwargs, list):
+            return func(*kwargs)
+        else:
+            return func()
 
     def use_customize_function(self, func_name, kwargs):
         """
@@ -41,7 +46,12 @@ class ActionImport:
         if func_name not in self.customize_function_list:
             assert False, "Customize中没有对应的方法" + func_name
         func = getattr(self.customize_function, func_name)
-        return func(**kwargs)
+        if isinstance(kwargs, dict):
+            return func(**kwargs)
+        elif isinstance(kwargs, list):
+            return func(*kwargs)
+        else:
+            return func()
 
     def use_function(self, func_name, kwargs):
         if func_name in self.base_function_list:
