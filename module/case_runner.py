@@ -100,15 +100,30 @@ class CaseRunner:
             self.do_action(action)
 
     def do_action(self, data):
+        global action_assert_data, action_assert_type
         action_type = data["TYPE"]
         if "DATA" in data.keys():
             action_data = data["DATA"]
         else:
             action_data = None
-        # action_assert = data["ASSERT"]
-        # action_assert_type = action_assert["TYPE"]
-        # action_assert_data = action_assert["DATA"]
-        if isinstance(action_data, dict):
-            self.ai.use_function(action_type, action_data)
+        if "ASSERT" in data.keys():
+            action_assert = data["ASSERT"]
+            action_assert_type = action_assert["TYPE"]
+            action_assert_data = action_assert["DATA"]
         else:
-            self.ai.use_function(action_type, action_data)
+            action_assert = None
+        # if isinstance(action_data, dict):
+        #     element_func = self.ai.use_function(action_type, action_data)
+        # else:
+        #     element_func = self.ai.use_function(action_type, action_data)
+        element_func = self.ai.use_function(action_type, action_data)
+        if action_assert is not None:
+            if isinstance(action_assert_data, list):
+                data = [element_func]
+                [data.append(i) for i in action_assert_data]
+                self.ai.use_function(action_assert_type, data)
+            else:
+                data = {"func": element_func}
+                for k, v in action_assert_data.items():
+                    data[k] = v
+                self.ai.use_function(action_assert_type, data)
