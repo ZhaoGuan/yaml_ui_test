@@ -1,21 +1,85 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # __author__ = 'Gz'
-from module.golable_function import config_reader
+from module.golable_function import config_reader, config_data_path, save_config
 from module.selenium_driver import BrowserDriver
 from module.web_actions import WebAction
 from module.action_import import ActionImport
 import os
+import yaml
 
 PATH = os.path.dirname(os.path.abspath(__file__))
+CASES_PATH = os.path.abspath(PATH + "/../cases")
+
+
+def dir_list(path, all_files):
+    file_list = os.listdir(path)
+    for filename in file_list:
+        filepath = os.path.join(path, filename)
+        if os.path.isdir(filepath):
+            dir_list(filepath, all_files)
+        else:
+            all_files.append(filepath)
+    return all_files
+
+
+def select_case_folder(options):
+    if options == "all":
+        result = []
+        path = CASES_PATH
+        return dir_list(path, result)
+    else:
+        return case_list(options)
+
+
+def case_list(folder_name):
+    folder_path = PATH + "/../case/" + folder_name
+    folder_list = []
+    try:
+        dir_list(folder_path, folder_list)
+    except Exception as e:
+        print(e)
+        print("文件夹填写错误")
+        assert False
+    result = [folder for folder in folder_list]
+    return result
+
+
+def get_cases(dir_name, source="online"):
+    cases = select_case_folder(dir_name)
+    result = []
+    for case in cases:
+        if "!" not in case:
+            data = config_reader(case)
+            description = data["DESCRIPTION"]
+            result.append({"path": case, "description": description, "source": source})
+    temp_path = os.path.abspath(PATH + "/../temp")
+    try:
+        os.mkdir(temp_path)
+    except:
+        pass
+    cases_path = temp_path + "/cases.yml"
+    save_config(result, cases_path)
 
 
 class CaseRunner:
-    def __init__(self, case_path):
+    def __init__(self, case_path, source="online"):
         self.config = config_reader(case_path)
         self.title = self.config["TITLE"]
         self.description = self.config["DESCRIPTION"]
-        self.url = self.config["URL"]
+        self.hots = self.config["HOST"]
+        try:
+            self.hots = self.hots[source]
+        except:
+            self.hots = None
+        if self.hots is None:
+            self.url = self.config["URL"]
+        else:
+            self.path = self.config["PATH"]
+            if self.path is None:
+                self.url = self.hots
+            else:
+                self.url = self.hots + self.path
         self.actions = self.config["ACTIONS"]
         self.bd = BrowserDriver()
         self.webdriver = self.bd.chrome_browser_driver()

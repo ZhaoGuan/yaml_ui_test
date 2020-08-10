@@ -1,5 +1,10 @@
 TITLE:
 DESCRIPTION:
+HOST:
+    test: https://www.baidu.com
+    pro: https://www.baidu.com
+    online: https://www.baidu.com
+PATH:
 URL: https://www.baidu.com
 ACTIONS:
 #     - TYPE: sleep

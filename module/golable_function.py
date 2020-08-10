@@ -33,6 +33,11 @@ def config_data_path(yaml_file):
     return {"data": yx, "path": yaml_file}
 
 
+def save_config(data, yaml_path):
+    with open(yaml_path, "w") as f:
+        yaml.dump(data, f)
+
+
 def source_input():
     argv = sys.argv[1:]
     source = None
