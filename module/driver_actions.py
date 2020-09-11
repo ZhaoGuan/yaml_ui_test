@@ -14,7 +14,7 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 PIC_PATH = os.path.abspath(PATH + "/../pic")
 
 
-class WebAction:
+class DriverAction:
     def __init__(self, driver):
         self.webdriver = driver
         self.element_wait_time = 5
@@ -102,107 +102,6 @@ class WebAction:
         element.clear()
         return element
 
-    def click_accept_alert(self, value):
-        """
-        接受弹窗
-        :param value: 元素xpath路径
-        :return:
-        """
-        self.click_element(value)
-        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
-        alert.accept()
-
-    def click_cancel_alert(self, value):
-        """
-        点击弹窗的取消
-        :param value: 元素xpath路径
-        :return:
-        """
-        self.click_element(value)
-        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
-        alert.dissmiss()
-
-    def click_send_keys_accept_alert(self, value, message):
-        """
-        弹窗输入内容并接受
-        :param value: 元素xpath路径
-        :param message: 需要输入的内容
-        :return:
-        """
-        self.click_element(value)
-        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
-        alert.sendKeys(message)
-        alert.accept()
-
-    def click_send_keys_cancel_alert(self, value, message):
-        """
-        弹窗输入内容并取消
-        :param value: 元素xpath路径
-        :param message: 需要输入的内容
-        :return:
-        """
-        self.click_element(value)
-        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
-        alert.sendKeys(message)
-        alert.dissmiss()
-
-    def switch_iframe(self, value):
-        """
-        切换iframe
-        :param value: iframe的xpath路径
-        :return:
-        """
-        try:
-            self.webdriver_wait.until(EC.frame_to_be_available_and_switch_to_it((By.ID, value)))
-        except Exception as e:
-            with allure.step('未发现元素截图'):
-                allure.attach(self.webdriver.get_screenshot_as_png(), "失败截图", allure.attachment_type.PNG)
-            assert False, "Not Found The iframe " + value
-
-    def switch_default_iframe(self):
-        """
-        切换至初始iframe
-        :return:
-        """
-        self.webdriver.switch_to.default_content()
-
-    def switch_default_page(self):
-        """
-        切换至初始页面
-        :return:
-        """
-        handles = self.webdriver.window_handles
-        self.webdriver.switch_to_window(handles[0])
-
-    def switch_new_page(self):
-        """
-        切换至新的页面
-        :return:
-        """
-        handles = self.webdriver.window_handles
-        self.webdriver.switch_to_window(handles[1])
-
-    def print_title(self):
-        """
-        输入当年页面的title
-        :return:
-        """
-        title = self.webdriver.title
-        print("Title is ", title)
-        return title
-
-    def assert_title(self, title):
-        """
-        校验当前页面是否为所需title
-        :param title: 应为title
-        :return:
-        """
-        now_title = self.webdriver.title
-        if now_title != title:
-            msg = "当前页面title不为：" + title
-            self.assert_result(False, msg)
-            assert False
-
     def click_element_change(self, value):
         """
         元素点击后是否发生了变化
@@ -267,9 +166,114 @@ class WebAction:
         else:
             return True
 
+    """
+    web 方法
+    """
+
+    def click_accept_alert(self, value):
+        """
+        web方法，接受弹窗
+        :param value: 元素xpath路径
+        :return:
+        """
+        self.click_element(value)
+        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
+        alert.accept()
+
+    def click_cancel_alert(self, value):
+        """
+        web方法，点击弹窗的取消
+        :param value: 元素xpath路径
+        :return:
+        """
+        self.click_element(value)
+        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
+        alert.dissmiss()
+
+    def click_send_keys_accept_alert(self, value, message):
+        """
+        web方法，弹窗输入内容并接受
+        :param value: 元素xpath路径
+        :param message: 需要输入的内容
+        :return:
+        """
+        self.click_element(value)
+        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
+        alert.sendKeys(message)
+        alert.accept()
+
+    def click_send_keys_cancel_alert(self, value, message):
+        """
+        web方法，弹窗输入内容并取消
+        :param value: 元素xpath路径
+        :param message: 需要输入的内容
+        :return:
+        """
+        self.click_element(value)
+        alert = self.webdriver_wait.until(lambda x: EC.alert_is_present())
+        alert.sendKeys(message)
+        alert.dissmiss()
+
+    def switch_iframe(self, value):
+        """
+        web方法，切换iframe
+        :param value: iframe的xpath路径
+        :return:
+        """
+        try:
+            self.webdriver_wait.until(EC.frame_to_be_available_and_switch_to_it((By.ID, value)))
+        except Exception as e:
+            with allure.step('未发现元素截图'):
+                allure.attach(self.webdriver.get_screenshot_as_png(), "失败截图", allure.attachment_type.PNG)
+            assert False, "Not Found The iframe " + value
+
+    def switch_default_iframe(self):
+        """
+        web方法，切换至初始iframe
+        :return:
+        """
+        self.webdriver.switch_to.default_content()
+
+    def switch_default_page(self):
+        """
+        web方法，切换至初始页面
+        :return:
+        """
+        handles = self.webdriver.window_handles
+        self.webdriver.switch_to_window(handles[0])
+
+    def switch_new_page(self):
+        """
+        web方法，切换至新的页面
+        :return:
+        """
+        handles = self.webdriver.window_handles
+        self.webdriver.switch_to_window(handles[1])
+
+    def print_title(self):
+        """
+        web方法，输入当年页面的title
+        :return:
+        """
+        title = self.webdriver.title
+        print("Title is ", title)
+        return title
+
+    def assert_title(self, title):
+        """
+        web方法，校验当前页面是否为所需title
+        :param title: 应为title
+        :return:
+        """
+        now_title = self.webdriver.title
+        if now_title != title:
+            msg = "当前页面title不为：" + title
+            self.assert_result(False, msg)
+            assert False
+
     def window_slide(self, begin_px, end_px):
         """
-        页面上下滑动
+        web方法，页面上下滑动
         :param begin_px: 起始点
         :param end_px: 结束点
         :return:
@@ -279,7 +283,7 @@ class WebAction:
 
     def window_to_element(self, value):
         """
-        将也面滑动到可见元素位置上
+        web方法，将也面滑动到可见元素位置上
         :param value: 元素xpath路径
         :return:
         """

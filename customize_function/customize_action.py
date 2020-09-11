@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # __author__ = 'Gz'
-from module.web_actions import WebAction
+from module.driver_actions import DriverAction
 
 
 class Customize:
     def __init__(self, webdriver):
         self.webdriver = webdriver
-        self.web_action = WebAction(webdriver)
+        self.web_action = DriverAction(webdriver)

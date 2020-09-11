@@ -1,5 +1,6 @@
 TITLE:
 DESCRIPTION:
+TYPE: WEB
 HOST:
     test: https://www.baidu.com
     pro: https://www.baidu.com
@@ -7,9 +8,6 @@ HOST:
 PATH:
 URL: https://www.baidu.com
 ACTIONS:
-#     - TYPE: sleep
-#       DATA:
-#         wait_time: 10
     - TYPE: send_element
       DATA:
         - //*[@id="kw"]

@@ -32,6 +32,12 @@ class DockerBrowser:
         vnc_port = port_check(self.vnc_base_port)
         try:
             docker_id = self.docker.containers.run(self.chrome_image,
+                                                   # environment={
+                                                   # "HTTP_PROXY": "http://192.168.84.168:8899",
+                                                   # "HTTPS_PROXY": "http://192.168.84.168:8899",
+                                                   # "http_proxy": "http://192.168.84.168:8899",
+                                                   # "https_proxy": "http://192.168.84.168:8899"
+                                                   # },
                                                    ports={"4444": str(port), "5900": str(vnc_port)},
                                                    remove=True,
                                                    detach=True).id

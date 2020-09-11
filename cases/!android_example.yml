@@ -1,0 +1,33 @@
+TITLE:
+DESCRIPTION:
+TYPE: ANDROID
+DESIRED_CAPS:
+    automationName: UiAutomator2
+    platformName: Android
+    deviceName: CB5A22N2RK
+    udid: ""
+    newCommandTimeout: 180
+    appPackage: com.meishubao.artaiclass
+    appActivity: com.meishubao.main.ui.app.MainActivity
+    noReset: true
+    # # 隐藏键盘
+#     resetKeyboard: true
+    # # 使用appium键盘
+#     unicodeKeyboard: true
+    # 解锁方式
+    unlockType: password
+    # 解锁密码
+    unlockKey: "000000"
+ACTIONS:
+    - TYPE: click_element
+      DATA:
+        - //*[@resource-id="com.meishubao.artaiclass:id/bottombarlayout"]/android.widget.LinearLayout[2]
+    - TYPE: sleep
+      DATA:
+        - 5
+    - TYPE: click_element
+      DATA:
+        value: //*[@resource-id="com.meishubao.artaiclass:id/ll_date"]
+    - TYPE: sleep
+      DATA:
+        - 5

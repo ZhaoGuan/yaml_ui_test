@@ -3,7 +3,8 @@
 # __author__ = 'Gz'
 from module.golable_function import config_reader, config_data_path, save_config
 from module.selenium_driver import BrowserDriver
-from module.web_actions import WebAction
+from module.appium_driver import AppiumDriver
+from module.driver_actions import DriverAction
 from module.action_import import ActionImport
 import os
 import yaml
@@ -65,37 +66,53 @@ def get_cases(dir_name, source="online"):
 class CaseRunner:
     def __init__(self, case_path, source="online"):
         self.config = config_reader(case_path)
-        self.title = self.config["TITLE"]
-        self.description = self.config["DESCRIPTION"]
-        self.hots = self.config["HOST"]
         try:
-            self.hots = self.hots[source]
+            self.type = self.config["TYPE"]
         except:
-            self.hots = None
-        if self.hots is None:
-            self.url = self.config["URL"]
-        else:
-            self.path = self.config["PATH"]
-            if self.path is None:
-                self.url = self.hots
+            self.type = "WEB"
+        if self.type == "WEB":
+            self.title = self.config["TITLE"]
+            self.description = self.config["DESCRIPTION"]
+            self.hots = self.config["HOST"]
+            try:
+                self.hots = self.hots[source]
+            except:
+                self.hots = None
+            if self.hots is None:
+                self.url = self.config["URL"]
             else:
-                self.url = self.hots + self.path
+                self.path = self.config["PATH"]
+                if self.path is None:
+                    self.url = self.hots
+                else:
+                    self.url = self.hots + self.path
+            self.bd = BrowserDriver()
+            self.driver = self.bd.chrome_browser_driver()
+        else:
+            self.desired_caps = self.config["DESIRED_CAPS"]
+            self.ad = AppiumDriver(self.desired_caps)
+            self.driver = self.ad.appium_driver()
         self.actions = self.config["ACTIONS"]
-        self.bd = BrowserDriver()
-        self.webdriver = self.bd.chrome_browser_driver()
-        self.wa = WebAction(self.webdriver)
-        self.wa.url(self.url)
-        self.ai = ActionImport(self.webdriver)
+        self.wa = DriverAction(self.driver)
+        self.ai = ActionImport(self.driver)
+
+    def close(self):
+        if self.type == "WEB":
+            self.bd.close_chrome_browser_driver()
+        else:
+            self.ad.close_appium_driver()
 
     def runner(self):
         try:
             self.__runner()
-            self.bd.close_chrome_browser_driver()
+            self.close()
         except Exception as error:
-            error.__init__ = self.bd.close_chrome_browser_driver()
+            error.__init__ = self.close
             raise Exception from error
 
     def __runner(self):
+        if self.type == "WEB":
+            self.wa.url(self.url)
         for action in self.actions:
             self.do_action(action)
 

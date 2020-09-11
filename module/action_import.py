@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # __author__ = 'Gz'
-from module.web_actions import WebAction
+from module.driver_actions import DriverAction
 from customize_function.customize_action import Customize
 
 
 class ActionImport:
     def __init__(self, webdriver):
-        self.base_function = WebAction(webdriver)
+        self.base_function = DriverAction(webdriver)
         self.customize_function = Customize(webdriver)
         self.base_function_list = list(filter(
             lambda m: not m.startswith("__") and not m.endswith("__") and callable(getattr(self.base_function, m)),
